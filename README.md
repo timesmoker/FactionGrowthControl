@@ -1,23 +1,41 @@
-# Quasimorph FactionGrowthControl
+## Quasimorph FactionGrowthControl
 
 ![thumbnail icon](media/thumbnail.png)
 
-# Configuration
+Quasimorph mod for Faction Growth Control
 
-The configuration file will be created on the first game run and can be found at `%AppData%\..\LocalLow\Magnum Scriptum Ltd\Quasimorph_ModConfigs\FactionGrowthControl\config.json`.
+## What this mod do
 
-|Name|Default|Description|
-|--|--|--|
-|FooKey|true|Some Description|
+1. Modifies the default power cost of missions.
+2. Modifies the success rate of missions that end due to time expiration.
+3. Adjusts the amount of power gained and lost based on the number of stations each faction owns.
+4. Limits the total number of missions to prevent excessive generation.
 
-## Key List
-The list of valid keyboard keys can be found  at the bottom of https://docs.unity3d.com/ScriptReference/KeyCode.html
-Beware that numbers 0-9 are Alpha0 - Alpha9.  Most of the other keys are as expected such as X for X.
-Use "None" to not bind the key.
+## Configuration
 
-# Buy Me a Coffee
-If you enjoy my mods and want to buy me a coffee, check out my [Ko-Fi](https://ko-fi.com/nbkredspy71915) page.
-Thanks!
+The configuration file will be created on the first game run and can be found at:  
+`%AppData%\..\LocalLow\Magnum Scriptum Ltd\Quasimorph_ModConfigs\FactionGrowthControl\config.json`
 
-# Source Code
+If you're unsure about what the configuration options mean,  
+a detailed explanation will be provided in a future update.
+
+If you can't wait for future update, ask to your chatGPT.
+
+## Thanks To
+
+- NBKRedSpy who made [QM_Template](https://github.com/NBKRedSpy/QM_Template)  
+  This mod wouldn’t have been possible without it. FOR REAL.
+
+- GatvinDev who made [MercenaryTraderLight](https://github.com/GatvinDev/MercenaryTraderLight/tree/master)  
+  Some parts of this mod were developed with reference to GatvinDev’s code. And, I'm looking forward to the MercenaryTrader mod
+
+## If you thanks to me
+Just give a star to the mod's GitHub repository.
+I'm unemployed. Seriously, it helps.
+
+## Source Code
 Source code is available on GitHub at https://github.com/JACOB/FactionGrowthControl
+
+## If You Have Question
+I ain't good at English at all.
+So if you have question, make your chatGPT trasnlate your words into Korean.
