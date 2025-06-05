@@ -1,0 +1,97 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <OutputType>Library</OutputType>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <PropertyGroup>
+        <GAME_NAME>Quasimorph</GAME_NAME>
+        <SteamId>3492938320</SteamId>
+    </PropertyGroup>
+    <PropertyGroup>
+        <GAME_PATH Condition="!Exists('$(GAME_PATH)')">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App $(GAME_STEAM_ID)', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32))</GAME_PATH>
+        <_SteamLibraryPath>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\SOFTWARE\Valve\Steam', 'SteamPath', null, RegistryView.Registry32))</_SteamLibraryPath>
+        <GAME_PATH Condition="!Exists('$(GAME_PATH)') AND '$(_SteamLibraryPath)' != ''">$(_SteamLibraryPath)\steamapps\common\$(GAME_NAME)</GAME_PATH>
+        <GAME_PATH Condition="!Exists('$(GAME_PATH)')">C:\Program Files\Steam\steamapps\common\$(GAME_NAME)</GAME_PATH>
+        <GAME_PATH Condition="!Exists('$(GAME_PATH)')">C:\Program Files (x86)\Steam\steamapps\common\$(GAME_NAME)</GAME_PATH>
+    </PropertyGroup>
+    <PropertyGroup>
+        <WorkshopPath>$(GAME_PATH)\..\..\workshop\content\2059170\$(SteamId)\</WorkshopPath>
+        <ManagedPath>$(GAME_PATH)\$(GAME_NAME)_Data\Managed\</ManagedPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="Move To Root\**"/>
+        <EmbeddedResource Remove="Move To Root\**"/>
+        <None Remove="Move To Root\**"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp" publicize="true">
+            <HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>$(ManagedPath)UnityEngine.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>$(ManagedPath)UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>$(ManagedPath)UnityEngine.InputLegacyModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Lib.harmony" Version="2.3.3"/>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
+        <PackageReference Include="Newtonsoft.json" Version="13.0.3"/>
+        <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0"/>
+    </ItemGroup>
+    <PropertyGroup>
+        <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+        <PackageFolder>$(ProjectDir)../package/</PackageFolder>
+
+    </PropertyGroup>
+    <Target Name="CleanArtifacts" AfterTargets="PostBuildEvent">
+        <ItemGroup>
+            <ArtifactFiles Include="$(TargetDir)AsmResolver.*"/>
+            <ArtifactFiles Include="$(TargetDir)BepInEx.AssemblyPublicizer.*"/>
+        </ItemGroup>
+        <Message Text="Deleting Build Artifacts from BepInEx Publicizer"/>
+        <Delete Files="@(ArtifactFiles)"/>
+    </Target>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="@echo off&#xD;&#xA;set deployDir=&quot;$(WorkshopPath)&quot;&#xD;&#xA;&#xD;&#xA;xcopy /f /y &quot;../modmanifest.json&quot; &quot;$(TargetDir)&quot;&#xD;&#xA;&#xD;&#xA;if '$(SteamId)'=='' (echo SteamId in project not set.  Aborting Workshop Deployment &amp;&amp; exit)&#xD;&#xA;echo deploying to %25deployDir%25&#xD;&#xA;&#xD;&#xA;mkdir &quot;$(WorkshopPath)&quot;&#xD;&#xA;&#xD;&#xA;xcopy /f /y &quot;$(ProjectDir)../media/thumbnail.png&quot; %25deployDir%25&#xD;&#xA;xcopy /f /y &quot;$(ProjectDir)../modmanifest.json&quot; %25deployDir%25&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;xcopy /f /y   &quot;$(TargetDir)$(TargetName).*&quot; %25deployDir%25&#xD;&#xA;xcopy /f /y   &quot;$(TargetDir)0Harmony.dll&quot; %25deployDir%25&#xD;&#xA;&#xD;&#xA;xcopy /f /y &quot;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Data.dll&quot; %25deployDir%25&#xD;&#xA;xcopy /f /y &quot;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.Serialization.dll&quot; %25deployDir%25&#xD;&#xA;xcopy /f /y  &quot;$(TargetDir)Newtonsoft.Json.dll&quot; %25deployDir%25&#xD;&#xA;"/>
+        <ItemGroup>
+            <WorkshopSourceFile Include="$(WorkshopPath)*.*"/>
+            <PackageRemoveFiles Include="$(PackageFolder)$(TargetName)/*.pdb"/>
+        </ItemGroup>
+    </Target>
+    <Target Condition="'$(SteamId)'!=''" Name="PostBuildPackage" AfterTargets="PostBuildEvent">
+        <ItemGroup>
+            <WorkshopSourceFile Include="$(WorkshopPath)*.*"/>
+            <PackageRemoveFiles Include="$(PackageFolder)$(TargetName)/*.pdb"/>
+        </ItemGroup>
+
+        <Message Text="---------- Creating Package: $(PackageFolder)$(TargetName)/*.pdb" Importance="high"/>
+        <RemoveDir Directories="$(PackageFolder)"/>
+        <Copy SourceFiles="@(WorkshopSourceFile)" DestinationFolder="$(PackageFolder)$(TargetName)"></Copy>
+        <Delete Files="@(PackageRemoveFiles)"/>
+        <ZipDirectory SourceDirectory="$(PackageFolder)" DestinationFile="$(PackageFolder)../$(TargetName).zip" Overwrite="true"/>
+    </Target>
+    <ItemGroup>
+        <Reference Update="System">
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+</Project>

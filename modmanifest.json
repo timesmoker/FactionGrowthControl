@@ -1,0 +1,7 @@
+{
+  "UniqueModName": "JACOB_FactionGrowthControl",
+  "Assemblies": [
+    "FactionGrowthControl.dll"
+  ],
+  "Dependencies": []
+}
