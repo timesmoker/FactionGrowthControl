@@ -6,7 +6,7 @@ Quasimorph mod for Faction Growth Control
 
 ## What this mod do
 
-1. Modifies the default power cost of missions.
+1. Modifies the default power cost and benefit of missions.
 2. Modifies the success rate of missions that end due to time expiration.
 3. Adjusts the amount of power gained and lost based on the number of stations each faction owns.
 4. Limits the total number of missions to prevent excessive generation.
@@ -39,18 +39,22 @@ Source code is available on GitHub at https://github.com/JACOB/FactionGrowthCont
 
 ## QnA
 
-Q. Non-steam version?
-A. Im Working on it
+Q. Non-steam version?  
+A. Im working on it.
 
-Q. No faction eliminination!
+Q. No faction eliminination!  
 A. Change config setting.
 
-Q. Power's never going up high!
+Q. Power's never going up high!  
 A. That's okay, power only affects mission's winrate in the entire game.
 
-Q. Thumbnail is terrible!
+Q. Thumbnail is terrible!  
 A. ChatGPT made it, blame Sam Altman.
 
 ## If You Have Question
-I ain't good at English at all.
+I ain't good at English at all.  
 So if you have question, please make your chatGPT trasnlate your words into Korean.
+
+## What I just wanna say
+This is my first mod.  
+I hope it's good enough to make you happy.
