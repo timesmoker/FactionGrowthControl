@@ -14,6 +14,8 @@ namespace FactionGrowthControl
     public class ModConfig
     {
         [JsonProperty]
+        public int ConfigVersion { get; private set; } = 1;
+        [JsonProperty]
         public int CaptureMissionCost { get; private set;  } = 300;
         [JsonProperty]
         public int CaptureMissionBuff { get; private set;  } = 0;
@@ -21,12 +23,12 @@ namespace FactionGrowthControl
         [JsonProperty]
         public int LowRiskMissionCost { get; private set;  } = 50;
         [JsonProperty]
-        public int LowRiskMissionBuff { get; private set;  } = 100;
+        public int LowRiskMissionBuff { get; private set;  } = 300;
 
         [JsonProperty]
         public int HighRiskMissionCost { get; private set;  } = 100;
         [JsonProperty]
-        public int HighRiskMissionBuff { get; private set;  } = 200;
+        public int HighRiskMissionBuff { get; private set;  } = 500;
 
         [JsonProperty]
         public int PowerBonusThreshold { get; private set;  }  = 8;
@@ -38,12 +40,12 @@ namespace FactionGrowthControl
         [JsonProperty]
         public int PowerPenaltyThreshold { get; private set;  }  = 13;
         [JsonProperty]
-        public float PowerPenaltyMultiplier { get; private set;  }  = 1.09f;
+        public float PowerPenaltyMultiplier { get; private set;  }  = 1.05f;
         
         [JsonProperty]
         public float MultiplierMin { get; private set;  }  = 0.2f;
         [JsonProperty]
-        public float MultiplierMax { get; private set;  }  = 1.7f;
+        public float MultiplierMax { get; private set;  }  = 2.0f;
         
         [JsonProperty]
         public float BaseWinRate { get; private set;  }  = 0.2f;
@@ -52,17 +54,18 @@ namespace FactionGrowthControl
         [JsonProperty]
         public float WinRateLogDiffWeight { get; private set;  }  = 0.0325f;
         [JsonProperty]
-        public float WinRateMin { get; private set;  }  = 0.2f;
+        public float WinRateMin { get; private set;  }  = 0.15f;
         [JsonProperty]
-        public float WinRateMax { get; private set;  }  = 0.8f;
+        public float WinRateMax { get; private set;  }  = 0.85f;
         
         [JsonProperty]
-        public float TotalMissionCapRate { get; private set;  } = 0.5f;
+        public float TotalMissionCapRate { get; private set;  } = 0.3f;
         
         
         public static ModConfig LoadConfig(string configPath)
         {
-            ModConfig config;
+            
+            ModConfig defaultConfig = new ModConfig();
 
             JsonSerializerSettings serializerSettings = new JsonSerializerSettings()
             {
@@ -74,19 +77,23 @@ namespace FactionGrowthControl
                 try
                 {
                     string sourceJson = File.ReadAllText(configPath);
+                    var loadedRaw = JsonConvert.DeserializeObject<Dictionary<string, object>>(sourceJson);
 
-                    config = JsonConvert.DeserializeObject<ModConfig>(sourceJson, serializerSettings);
+                    int existingVersion = -1;
 
-                    //Add any new elements that have been added since the last mod version the user had.
-                    string upgradeConfig = JsonConvert.SerializeObject(config, serializerSettings);
+                    bool hasVersion =
+                        loadedRaw.TryGetValue(nameof(ConfigVersion), out var versionObj) &&
+                        int.TryParse(versionObj?.ToString(), out existingVersion);
 
-                    if (upgradeConfig != sourceJson)
+                    if (!hasVersion || existingVersion < defaultConfig.ConfigVersion)
                     {
-                        Plugin.Logger.Log("Updating config with missing elements");
-                        //re-write
-                        File.WriteAllText(configPath, upgradeConfig);
+                        Plugin.Logger.Log($"[Config] Outdated or missing version (found: v{existingVersion}). Overwriting with v{defaultConfig.ConfigVersion}");
+                        string updatedJson = JsonConvert.SerializeObject(defaultConfig, serializerSettings);
+                        File.WriteAllText(configPath, updatedJson);
+                        return defaultConfig;
                     }
 
+                    ModConfig config = JsonConvert.DeserializeObject<ModConfig>(sourceJson, serializerSettings);
                     Plugin.Logger.Log("Config loaded.");
                     return config;
                 }
@@ -95,19 +102,17 @@ namespace FactionGrowthControl
                     Plugin.Logger.LogError("Error parsing configuration.  Ignoring config file and using defaults");
                     Plugin.Logger.LogException(ex);
 
-                    //Not overwriting in case the user just made a typo.
-                    config = new ModConfig();
-                    return config;
+                    Plugin.Logger.LogError("[Config] Failed to load config. Using default.");
+                    Plugin.Logger.LogException(ex);
+                    return defaultConfig;
                 }
             }
             else
             {
-                config = new ModConfig();
-
-                string json = JsonConvert.SerializeObject(config, serializerSettings);
+                string json = JsonConvert.SerializeObject(defaultConfig, serializerSettings);
                 File.WriteAllText(configPath, json);
-
-                return config;
+                Plugin.Logger.Log("[Config] No config found. Created new one.");
+                return defaultConfig;
             }
         }
     }
