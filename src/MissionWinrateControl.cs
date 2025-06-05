@@ -24,6 +24,12 @@ namespace FactionGrowthControl
         ItemsPrices itemsPrices,
         Difficulty difficulty)
     {
+            float chance = 0.2f;
+            float logRatioWeight = 0.2f;
+            float logDiffWeight = 0.0325f;
+            float chanceMin = 0.2f;
+            float chanceMax = 0.8f;
+            
             for (int index = missions.Values.Count - 1; index >= 0 && missions.Values.Count != 0; --index)
             {
                 var mission = missions.Values[index];
@@ -33,7 +39,6 @@ namespace FactionGrowthControl
 
                 if (mission.IsStoryMission)
                 {
-                    Plugin.Logger.Log("[MissionUpdate] Skipped story mission");
                     MissionSystem.RemoveMission(missions, mission.StationId);
                     continue;
                 }
@@ -42,31 +47,20 @@ namespace FactionGrowthControl
                 var faction1 = factions.Get(mission.BeneficiaryFactionId);
                 var faction2 = factions.Get(mission.VictimFactionId);
 
-                float A = faction1.Power;
-                float B = faction2.Power;
-
-                Plugin.Logger.Log($"[MissionUpdate] Faction power - Beneficiary: {A}, Victim: {B}");
-
-                float chance = 0.2f;
-
-                if (A > 0 && B > 0)
+                if (faction1.Power > 0 && faction2.Power > 0)
                 {
-                    float logRatio = 0.2f * Mathf.Log10(Mathf.Max(A, B) / Mathf.Min(A, B));
-                    float logDiff = 0.0325f * Mathf.Log10(Mathf.Abs(A - B));
+                    float max = Mathf.Max(faction1.Power, faction2.Power);
+                    float min = Mathf.Min(faction1.Power, faction2.Power);
+                    float diff = Mathf.Abs(faction1.Power - faction2.Power);
+                    int sign = faction1.Power > faction2.Power ? 1 : (faction1.Power < faction2.Power ? -1 : 0);
 
-                    Plugin.Logger.Log($"[MissionUpdate] logRatio={logRatio:F4}, logDiff={logDiff:F4}");
+                    float logRatio = logRatioWeight * Mathf.Log10(max / min);
+                    float logDiff  = logDiffWeight  * Mathf.Log10(diff);
 
-                    if (A > B)
-                    {
-                        chance += logRatio + logDiff;
-                    }
-                    else if (A < B)
-                    {
-                        chance -= logRatio + logDiff;
-                    }
+                    chance += sign * (logRatio + logDiff);
                 }
-
-                chance = Mathf.Clamp(chance, 0.2f, 0.8f);
+                
+                chance = Mathf.Clamp(chance, chanceMin, chanceMax);
                 Plugin.Logger.Log($"[MissionUpdate] Final chance = {chance:P1}");
 
                 bool isSuccess = UnityEngine.Random.value < chance;
@@ -82,28 +76,23 @@ namespace FactionGrowthControl
                 if (isSuccess)
                 {
                     newsEvent.NewsType = rec.NewsTypeEndGood;
-                    Plugin.Logger.Log($"[MissionUpdate] NewsType = {newsEvent.NewsType} (Success)");
                     MissionSystem.ProcessMissionSuccessActions(
                         stations, spaceTime, populationDebugData, travelMetadata, factions, itemsPrices, difficulty, mission);
                 }
                 else
                 {
                     newsEvent.NewsType = rec.NewsTypeEndFail;
-                    Plugin.Logger.Log($"[MissionUpdate] NewsType = {newsEvent.NewsType} (Failure)");
                     MissionSystem.ProcessMissionFailureActions(stations, spaceTime, travelMetadata, factions, mission);
 
                     if (travelMetadata.CurrentSpaceObject.Equals(station.SpaceObjectId) && !travelMetadata.IsInTravel)
                     {
                         UI.Get<SpaceHudScreen>().RefreshUIOnArrival(travelMetadata.CurrentSpaceObject);
-                        Plugin.Logger.Log("[MissionUpdate] UI refreshed due to mission failure at current location.");
                     }
                 }
 
                 NewsSystem.AddNews(news, spaceTime, travelMetadata, newsEvent);
-                Plugin.Logger.Log("[MissionUpdate] News event added.");
 
                 MissionSystem.RemoveMission(missions, mission.StationId);
-                Plugin.Logger.Log("[MissionUpdate] Mission removed.");
             }
 
             return false; 
