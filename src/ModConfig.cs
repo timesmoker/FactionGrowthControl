@@ -23,15 +23,15 @@ namespace FactionGrowthControl
         [JsonProperty]
         public int LowRiskMissionCost { get; private set;  } = 50;
         [JsonProperty]
-        public int LowRiskMissionBuff { get; private set;  } = 300;
+        public int LowRiskMissionBuff { get; private set;  } = 400;
 
         [JsonProperty]
         public int HighRiskMissionCost { get; private set;  } = 100;
         [JsonProperty]
-        public int HighRiskMissionBuff { get; private set;  } = 500;
+        public int HighRiskMissionBuff { get; private set;  } = 700;
 
         [JsonProperty]
-        public int PowerBonusThreshold { get; private set;  }  = 8;
+        public int PowerBonusThreshold { get; private set;  }  = 10;
         [JsonProperty]
         public float PowerGainBonusMultiplier { get; private set;  }  = 1.3f;
         [JsonProperty]
@@ -40,7 +40,7 @@ namespace FactionGrowthControl
         [JsonProperty]
         public int PowerPenaltyThreshold { get; private set;  }  = 13;
         [JsonProperty]
-        public float PowerPenaltyMultiplier { get; private set;  }  = 1.05f;
+        public float PowerPenaltyMultiplier { get; private set;  }  = 1.03f;
         
         [JsonProperty]
         public float MultiplierMin { get; private set;  }  = 0.2f;
@@ -54,9 +54,9 @@ namespace FactionGrowthControl
         [JsonProperty]
         public float WinRateLogDiffWeight { get; private set;  }  = 0.0325f;
         [JsonProperty]
-        public float WinRateMin { get; private set;  }  = 0.15f;
+        public float WinRateMin { get; private set;  }  = 0.2f;
         [JsonProperty]
-        public float WinRateMax { get; private set;  }  = 0.85f;
+        public float WinRateMax { get; private set;  }  = 0.8f;
         
         [JsonProperty]
         public float TotalMissionCapRate { get; private set;  } = 0.3f;
