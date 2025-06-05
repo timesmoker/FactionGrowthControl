@@ -27,7 +27,8 @@ If you can't wait for future update, ask to your chatGPT.
   This mod wouldn’t have been possible without it. FOR REAL.
 
 - GatvinDev who made [MercenaryTraderLight](https://github.com/GatvinDev/MercenaryTraderLight/tree/master)  
-  Some parts of this mod were developed with reference to GatvinDev’s code. And, I'm looking forward to the MercenaryTrader mod
+  Some parts of this mod were developed with reference to GatvinDev’s code.
+  And, I'm looking forward to the MercenaryTrader mod
 
 ## If you thanks to me
 Just give a star to the mod's GitHub repository.
@@ -36,6 +37,20 @@ I'm unemployed. Seriously, it helps.
 ## Source Code
 Source code is available on GitHub at https://github.com/JACOB/FactionGrowthControl
 
+## QnA
+
+Q. Non-steam version?
+A. Im Working on it
+
+Q. No faction eliminination!
+A. Change config setting.
+
+Q. Power's never going up high!
+A. That's okay, power only affects mission's winrate in the entire game.
+
+Q. Thumbnail is terrible!
+A. ChatGPT made it, blame Sam Altman.
+
 ## If You Have Question
 I ain't good at English at all.
-So if you have question, make your chatGPT trasnlate your words into Korean.
+So if you have question, please make your chatGPT trasnlate your words into Korean.
