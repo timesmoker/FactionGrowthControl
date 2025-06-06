@@ -13,7 +13,7 @@ namespace FactionGrowthControl
 {
     public static class FactionSys_MissionCapPatch
     {
-        private static int MaxMissionsCap => (int)(Data.Stations.Count / Plugin.Config.TotalMissionCapRate);
+        private static int MaxMissionsCap => (int)(Data.Stations.Count * Plugin.Config.TotalMissionCapRate);
         private static readonly System.Random Rng = new System.Random();
 
         [HarmonyPatch(typeof(FactionSystem), nameof(FactionSystem.FactionsTick))]
