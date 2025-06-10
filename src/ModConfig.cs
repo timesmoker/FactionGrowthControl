@@ -14,7 +14,7 @@ namespace FactionGrowthControl
     public class ModConfig
     {
         [JsonProperty]
-        public int ConfigVersion { get; private set; } = 1;
+        public int ConfigVersion { get; private set; } = 2;
         [JsonProperty]
         public int CaptureMissionCost { get; private set;  } = 300;
         [JsonProperty]
@@ -23,24 +23,24 @@ namespace FactionGrowthControl
         [JsonProperty]
         public int LowRiskMissionCost { get; private set;  } = 50;
         [JsonProperty]
-        public int LowRiskMissionBuff { get; private set;  } = 400;
+        public int LowRiskMissionBuff { get; private set;  } = 200;
 
         [JsonProperty]
         public int HighRiskMissionCost { get; private set;  } = 100;
         [JsonProperty]
-        public int HighRiskMissionBuff { get; private set;  } = 700;
+        public int HighRiskMissionBuff { get; private set;  } = 400;
 
         [JsonProperty]
-        public int PowerBonusThreshold { get; private set;  }  = 10;
+        public int PowerBonusThreshold { get; private set;  }  = 8;
         [JsonProperty]
         public float PowerGainBonusMultiplier { get; private set;  }  = 1.3f;
         [JsonProperty]
         public float PowerLossBonusMultiplier { get; private set;  }  = 0.8f;
         
         [JsonProperty]
-        public int PowerPenaltyThreshold { get; private set;  }  = 13;
+        public int PowerPenaltyThreshold { get; private set;  }  = 12;
         [JsonProperty]
-        public float PowerPenaltyMultiplier { get; private set;  }  = 1.03f;
+        public float PowerPenaltyMultiplier { get; private set;  }  = 1.07f;
         
         [JsonProperty]
         public float MultiplierMin { get; private set;  }  = 0.2f;
@@ -54,12 +54,12 @@ namespace FactionGrowthControl
         [JsonProperty]
         public float WinRateLogDiffWeight { get; private set;  }  = 0.0325f;
         [JsonProperty]
-        public float WinRateMin { get; private set;  }  = 0.2f;
+        public float WinRateMin { get; private set;  }  = 0.25f;
         [JsonProperty]
-        public float WinRateMax { get; private set;  }  = 0.8f;
+        public float WinRateMax { get; private set;  }  = 0.75f;
         
         [JsonProperty]
-        public float TotalMissionCapRate { get; private set;  } = 0.3f;
+        public float TotalMissionCapRate { get; private set;  } = 0.4f;
         
         
         public static ModConfig LoadConfig(string configPath)
