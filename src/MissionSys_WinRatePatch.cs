@@ -30,6 +30,7 @@ namespace FactionGrowthControl
                 TravelMetadata travelMetadata,
                 Factions factions,
                 ItemsPrices itemsPrices,
+                MagnumProgression magnumProgression,
                 Difficulty difficulty)
             {
                 for (int index = missions.Values.Count - 1; index >= 0 && missions.Values.Count != 0; --index)
@@ -72,7 +73,7 @@ namespace FactionGrowthControl
                         newsEvent.NewsType = rec.NewsTypeEndGood;
                         MissionSystem.ProcessMissionSuccessActions(
                             stations, spaceTime, populationDebugData, travelMetadata,
-                            factions, itemsPrices, difficulty, mission);
+                            factions, itemsPrices,magnumProgression, difficulty, mission);
                     }
                     else
                     {
