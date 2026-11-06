@@ -42,7 +42,7 @@ namespace FactionGrowthControl
         
         [HarmonyPatch(typeof(ProcMissionRecord), "get_PowerBuff")]
         [HarmonyPostfix]
-        public static void MissionPowerBuffOverrides(ProcMissionRecord __instance, ref int __result)
+        public static void MissionPowerBuffOverrides(ProcMissionRecord __instance, ref float __result)
         {
             if (HighRiskMissions.Contains(__instance.ProcMissionType))
                 __result = HighRiskMissionBuff;
