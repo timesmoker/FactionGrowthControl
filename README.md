@@ -22,10 +22,8 @@ It brings balanced, yet dynamic faction power progression—so you can play long
 The configuration file will be created on the first game run and can be found at:  
 `%AppData%\..\LocalLow\Magnum Scriptum Ltd\Quasimorph_ModConfigs\FactionGrowthControl\config.json`
 
-If you're unsure about what the configuration options mean,  
-a detailed explanation will be provided in a future update.
-
-If you can't wait for future update, ask to your chatGPT.
+See [CONFIG.md](CONFIG.md) for what every option does and how the numbers are calculated.  
+한국어 설명: [CONFIG.ko.md](CONFIG.ko.md)
 
 ## Thanks To
 
